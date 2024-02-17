@@ -1,145 +1,199 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/atom-one-dark.dart';
+import 'package:flutter_highlight/themes/atom-one-light.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:selectable/selectable.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-class Test extends StatefulWidget {
-  const Test({super.key});
+class SourceCodeView extends StatefulWidget {
+  // Path of source file (relative to project root). The file's content will be
+  // shown in the "Code" tab.
+  final String? filePath;
+  final String? codeContent;
+  final String? codeLinkPrefix;
+  // Fine tune the menu appearance.
+  final bool showLabelText;
+  final Color? iconBackgroundColor;
+  final Color? iconForegroundColor;
+  final Color? labelBackgroundColor;
+  final TextStyle? labelTextStyle;
+  // Widget to put before/after the code content.
+  final Widget? headerWidget;
+  final Widget? footerWidget;
+  // Code highlighter theme for light/dark theme, defaults to "atomOne" themes.
+  final Map<String, TextStyle>? lightTheme;
+  final Map<String, TextStyle>? darkTheme;
+
+  const SourceCodeView({
+    Key? key,
+    required this.filePath,
+    this.codeContent,
+    this.codeLinkPrefix,
+    this.showLabelText = false,
+    this.iconBackgroundColor,
+    this.iconForegroundColor,
+    this.labelBackgroundColor,
+    this.labelTextStyle,
+    this.headerWidget,
+    this.footerWidget,
+    this.lightTheme,
+    this.darkTheme,
+  }) : super(key: key);
+
+  String? get codeLink => this.codeLinkPrefix == null
+      ? null
+      : '${this.codeLinkPrefix}/${this.filePath}';
 
   @override
-  State<Test> createState() => _TestState();
-}
-
-class _TestState extends State<Test> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF080808),
-      appBar: AppBar(
-        leading: const SizedBox.shrink(),
-        title: const Text(
-          'Setting',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w100),
-        ),
-        backgroundColor: const Color(0xFF080808),
-        actions: const [
-          Icon(
-            Icons.search,
-            color: Color(0xFFf9f9f9),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            backgroundColor: Color(0xFF008cff),
-            // minRadius: 20,
-            maxRadius: 15,
-            child: Icon(
-              Icons.person,
-              color: Color(
-                0xFF080808,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-        ],
-        elevation: 0,
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.only(
-        //     bottomLeft: Radius.circular(20),
-        //     bottomRight: Radius.circular(20),
-        //   ),
-        // ),
-        // bottom: PreferredSize(
-        //   preferredSize: const Size.fromHeight(40.0), // Set custom height for the bottom widget
-        //   child: Container(
-        //     alignment: Alignment.center,
-        //     // color: const Color.fromARGB(255, 255, 0, 0),
-        //     child: const Text('Bottom Widget'),
-        //     // Your bottom widget goes here
-        //   ),
-        // ),
-      ),
-      body: const Column(
-        children: [
-          Item(
-            icon: Icons.wifi,
-            color: Color(0xFF52a4ff),
-            title: 'Connection',
-            subTile: 'Wi-Fi, Bluetooth, Data usage, Airplane mode',
-          ),
-          Item(
-            icon: Icons.volume_up,
-            color: Color(0xFF8c84f3),
-            title: 'Sound and Vibration',
-            subTile: 'Sound mode, Bluetooth, RingTone, Volume',
-          )
-        ],
-      ),
-    );
+  SourceCodeViewState createState() {
+    return SourceCodeViewState();
   }
 }
 
-class Item extends StatelessWidget {
-  const Item({
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.subTile,
-    this.titleColor = const Color(0xFFfafafa),
-    this.subTileColor = const Color(0xFF8f8f8f),
-    super.key,
-  });
-  final String title;
-  final String subTile;
-  final IconData? icon;
-  final Color color;
-  final Color titleColor;
-  final Color subTileColor;
-  @override
-  Widget build(BuildContext context) {
+class SourceCodeViewState extends State<SourceCodeView> {
+  double _textScaleFactor = 1.0;
+  ScrollController scrollController = ScrollController();
+
+  Widget _getCodeView(String codeContent, BuildContext context) {
+    codeContent = codeContent.replaceAll('\r\n', '\n');
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        width: double.infinity,
-        // height: 50,
-        decoration: BoxDecoration(
-          color: const Color(0xFF252525),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Icon(
-                icon,
-                color: color,
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: titleColor, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(
-                  width: 250,
-                  child: Text(
-                    subTile,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: subTileColor,
-                      fontWeight: FontWeight.w100,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+      constraints: BoxConstraints.expand(),
+      child: Scrollbar(
+        controller: scrollController,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              if (widget.headerWidget != null) ...[
+                widget.headerWidget!,
+                Divider(),
+              ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Selectable(
+                  child: HighlightView(
+                    codeContent,
+                    language: 'dart',
+                    theme: Theme.of(context).brightness == Brightness.light
+                        ? widget.lightTheme ?? atomOneLightTheme
+                        : widget.darkTheme ?? atomOneDarkTheme,
+                    textStyle: GoogleFonts.notoSansMono(fontSize: 12)
+                        .apply(fontSizeFactor: this._textScaleFactor),
                   ),
                 ),
+              ),
+              if (widget.footerWidget != null) ...[
+                Divider(),
+                widget.footerWidget!,
               ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<SpeedDialChild> _buildFloatingButtons({
+    TextStyle? labelTextStyle,
+    Color? iconBackgroundColor,
+    Color? iconForegroundColor,
+    Color? labelBackgroundColor,
+    required bool showLabelText,
+  }) =>
+      [
+        if (this.widget.codeLink != null)
+          SpeedDialChild(
+            child: Icon(Icons.content_copy),
+            label: showLabelText ? 'Copy code to clipboard' : null,
+            backgroundColor: iconBackgroundColor,
+            foregroundColor: iconForegroundColor,
+            labelBackgroundColor: labelBackgroundColor,
+            labelStyle: labelTextStyle,
+            onTap: () async {
+              if (widget.codeContent != null) {
+                Clipboard.setData(ClipboardData(text: widget.codeContent!));
+              } else if (widget.filePath?.isNotEmpty ?? false) {
+                Clipboard.setData(ClipboardData(
+                    text: await DefaultAssetBundle.of(context)
+                        .loadString(widget.filePath ?? '')));
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Code copied to clipboard!'),
+              ));
+            },
+          ),
+        if (this.widget.codeLink != null)
+          SpeedDialChild(
+            child: Icon(Icons.open_in_new),
+            label: showLabelText ? 'View code in browser' : null,
+            backgroundColor: iconBackgroundColor,
+            foregroundColor: iconForegroundColor,
+            labelBackgroundColor: labelBackgroundColor,
+            labelStyle: labelTextStyle,
+            onTap: () => url_launcher.launchUrl(Uri.parse(widget.codeLink!)),
+          ),
+        SpeedDialChild(
+          child: Icon(Icons.zoom_out),
+          label: showLabelText ? 'Zoom out' : null,
+          backgroundColor: iconBackgroundColor,
+          foregroundColor: iconForegroundColor,
+          labelBackgroundColor: labelBackgroundColor,
+          labelStyle: labelTextStyle,
+          onTap: () => setState(() {
+            this._textScaleFactor = max(0.8, this._textScaleFactor - 0.1);
+          }),
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.zoom_in),
+          label: showLabelText ? 'Zoom in' : null,
+          backgroundColor: iconBackgroundColor,
+          foregroundColor: iconForegroundColor,
+          labelBackgroundColor: labelBackgroundColor,
+          labelStyle: labelTextStyle,
+          onTap: () => setState(() {
+            this._textScaleFactor += 0.1;
+          }),
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: widget.codeContent != null
+          ? Future<String>.value(widget.codeContent)
+          : DefaultAssetBundle.of(context).loadString(widget.filePath ?? ''),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            body: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: _getCodeView(snapshot.data!, context),
             ),
-          ],
-        ));
+            floatingActionButton: SpeedDial(
+              closeManually: true,
+              children: _buildFloatingButtons(
+                labelTextStyle: widget.labelTextStyle,
+                iconBackgroundColor: widget.iconBackgroundColor,
+                iconForegroundColor: widget.iconForegroundColor,
+                labelBackgroundColor: widget.labelBackgroundColor,
+                showLabelText: widget.showLabelText,
+              ),
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              activeBackgroundColor: Colors.red,
+              activeForegroundColor: Colors.white,
+              animatedIcon: AnimatedIcons.menu_close,
+            ),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }

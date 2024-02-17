@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:widgets_catalog/shared/app_scaffold.dart';
 
 class StateFulWidgets extends StatefulWidget {
   const StateFulWidgets({super.key});
@@ -14,10 +15,9 @@ class _StateFulWidgetsState extends State<StateFulWidgets> {
   Color color = Colors.blue;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('stateful widget'),
-      ),
+    return AppScaffold(
+      filePath: 'lib/10statefulwidgets.dart',
+      title: 'stateful widget',
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

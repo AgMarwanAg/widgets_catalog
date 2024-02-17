@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:widgets_catalog/00test.dart';
 import 'package:widgets_catalog/01container_card.dart';
 import 'package:widgets_catalog/02expand_and_flex.dart';
 import 'package:widgets_catalog/03my_scafflold.dart';
@@ -59,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisCount: 3,
         crossAxisSpacing: 20,
         children: const [
-          NavigationButton(label: 'Test', page: Test()),
+          // NavigationButton(label: 'Test', page: Test()),
           NavigationButton(label: 'card and container', page: ContainerCard()),
           NavigationButton(label: 'Expand and flex', page: ExpandAndFlex()),
           NavigationButton(label: 'Scaffold', page: MyScaffold()),

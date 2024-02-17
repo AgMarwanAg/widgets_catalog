@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:widgets_catalog/shared/app_scaffold.dart';
 
 class StatefulBubuttons extends StatefulWidget {
   const StatefulBubuttons({super.key});
@@ -21,10 +26,9 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
   double progressValue = 0.2;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stateful Buttons'),
-      ),
+    return AppScaffold(
+      filePath: 'lib/11statefulButtons.dart',
+      title: 'Stateful Buttons',
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -196,7 +200,40 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
                       progressValue += 0.2;
                     });
                   },
-                  icon: const Icon(Icons.add))
+                  icon: const Icon(Icons.add)),
+                  
+              DropdownButton<Countery>(
+                hint: const Text('Countries'),
+                icon: const Icon(Icons.read_more),
+                isExpanded: false,
+                dropdownColor: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+                items: countries
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.name),
+                        ))
+                    .toList(),
+                value: _selectedCountry,
+                onChanged: (Countery? value) {
+                  setState(() {
+                    _selectedCountry = value;
+                  });
+                },
+              ),
+               PopupMenuButton(onSelected: (value) async {
+               
+                setState(() {
+                  _selectedCountry = value;
+                });
+              }, itemBuilder: (context) {
+                return countries.map((e) {
+                  return PopupMenuItem(
+                    value: e,
+                    child: Text(e.name),
+                  );
+                }).toList();
+              })
             ],
           ),
         ),
@@ -211,6 +248,13 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
     PaymentMethod('Cash on Delivery'),
   ];
   PaymentMethod? _selectedPaymentMethod;
+  final List<Countery> countries = [
+    Countery(1, 'Saudi Arabia', 966),
+    Countery(2, 'Yemen', 967),
+    Countery(3, 'Egypt', 20),
+    Countery(4, 'Algeria', 213),
+  ];
+  Countery? _selectedCountry;
 }
 
 class PaymentMethod {
@@ -218,3 +262,11 @@ class PaymentMethod {
 
   PaymentMethod(this.name);
 }
+
+class Countery {
+  final String name;
+  final int code;
+  int id;
+  Countery(this.id, this.name, this.code);
+}
+

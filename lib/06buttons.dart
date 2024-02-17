@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:widgets_catalog/shared/app_scaffold.dart';
 
 class Buttons extends StatelessWidget {
   const Buttons({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      title: 'Buttons',
+      filePath: 'lib/06buttons.dart',
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
