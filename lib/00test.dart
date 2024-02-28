@@ -45,9 +45,9 @@ class SourceCodeView extends StatefulWidget {
     this.darkTheme,
   }) : super(key: key);
 
-  String? get codeLink => this.codeLinkPrefix == null
+  String? get codeLink => codeLinkPrefix == null
       ? null
-      : '${this.codeLinkPrefix}/${this.filePath}';
+      : '$codeLinkPrefix/$filePath';
 
   @override
   SourceCodeViewState createState() {
@@ -62,7 +62,7 @@ class SourceCodeViewState extends State<SourceCodeView> {
   Widget _getCodeView(String codeContent, BuildContext context) {
     codeContent = codeContent.replaceAll('\r\n', '\n');
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       child: Scrollbar(
         controller: scrollController,
         child: SingleChildScrollView(
@@ -71,7 +71,7 @@ class SourceCodeViewState extends State<SourceCodeView> {
             children: [
               if (widget.headerWidget != null) ...[
                 widget.headerWidget!,
-                Divider(),
+                const Divider(),
               ],
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -83,12 +83,12 @@ class SourceCodeViewState extends State<SourceCodeView> {
                         ? widget.lightTheme ?? atomOneLightTheme
                         : widget.darkTheme ?? atomOneDarkTheme,
                     textStyle: GoogleFonts.notoSansMono(fontSize: 12)
-                        .apply(fontSizeFactor: this._textScaleFactor),
+                        .apply(fontSizeFactor: _textScaleFactor),
                   ),
                 ),
               ),
               if (widget.footerWidget != null) ...[
-                Divider(),
+                const Divider(),
                 widget.footerWidget!,
               ],
             ],
@@ -106,9 +106,9 @@ class SourceCodeViewState extends State<SourceCodeView> {
     required bool showLabelText,
   }) =>
       [
-        if (this.widget.codeLink != null)
+        if (widget.codeLink != null)
           SpeedDialChild(
-            child: Icon(Icons.content_copy),
+            child: const Icon(Icons.content_copy),
             label: showLabelText ? 'Copy code to clipboard' : null,
             backgroundColor: iconBackgroundColor,
             foregroundColor: iconForegroundColor,
@@ -122,14 +122,14 @@ class SourceCodeViewState extends State<SourceCodeView> {
                     text: await DefaultAssetBundle.of(context)
                         .loadString(widget.filePath ?? '')));
               }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Code copied to clipboard!'),
               ));
             },
           ),
-        if (this.widget.codeLink != null)
+        if (widget.codeLink != null)
           SpeedDialChild(
-            child: Icon(Icons.open_in_new),
+            child: const Icon(Icons.open_in_new),
             label: showLabelText ? 'View code in browser' : null,
             backgroundColor: iconBackgroundColor,
             foregroundColor: iconForegroundColor,
@@ -138,25 +138,25 @@ class SourceCodeViewState extends State<SourceCodeView> {
             onTap: () => url_launcher.launchUrl(Uri.parse(widget.codeLink!)),
           ),
         SpeedDialChild(
-          child: Icon(Icons.zoom_out),
+          child: const Icon(Icons.zoom_out),
           label: showLabelText ? 'Zoom out' : null,
           backgroundColor: iconBackgroundColor,
           foregroundColor: iconForegroundColor,
           labelBackgroundColor: labelBackgroundColor,
           labelStyle: labelTextStyle,
           onTap: () => setState(() {
-            this._textScaleFactor = max(0.8, this._textScaleFactor - 0.1);
+            _textScaleFactor = max(0.8, _textScaleFactor - 0.1);
           }),
         ),
         SpeedDialChild(
-          child: Icon(Icons.zoom_in),
+          child: const Icon(Icons.zoom_in),
           label: showLabelText ? 'Zoom in' : null,
           backgroundColor: iconBackgroundColor,
           foregroundColor: iconForegroundColor,
           labelBackgroundColor: labelBackgroundColor,
           labelStyle: labelTextStyle,
           onTap: () => setState(() {
-            this._textScaleFactor += 0.1;
+            _textScaleFactor += 0.1;
           }),
         ),
       ];
@@ -171,7 +171,7 @@ class SourceCodeViewState extends State<SourceCodeView> {
         if (snapshot.hasData) {
           return Scaffold(
             body: Padding(
-              padding: EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(4.0),
               child: _getCodeView(snapshot.data!, context),
             ),
             floatingActionButton: SpeedDial(
@@ -191,7 +191,7 @@ class SourceCodeViewState extends State<SourceCodeView> {
             ),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

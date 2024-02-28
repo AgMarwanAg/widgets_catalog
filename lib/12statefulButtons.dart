@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:widgets_catalog/shared/app_scaffold.dart';
 
 class StatefulBubuttons extends StatefulWidget {
@@ -20,14 +16,14 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
   List<String> genders = ['Male', 'Female'];
   String gender = 'Male';
   int _radioVal = 0;
-  PaymentType _selectedPaymentType = PaymentType.cash;
+  PaymentType? _selectedPaymentType;
   bool swichValue = false;
   double sliderValue = 0.2;
   double progressValue = 0.2;
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      filePath: 'lib/11statefulButtons.dart',
+      filePath: 'lib/12statefulButtons.dart',
       title: 'Stateful Buttons',
       body: Center(
         child: SingleChildScrollView(
@@ -201,7 +197,6 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
                     });
                   },
                   icon: const Icon(Icons.add)),
-                  
               DropdownButton<Countery>(
                 hint: const Text('Countries'),
                 icon: const Icon(Icons.read_more),
@@ -221,19 +216,20 @@ class _StatefulBubuttonsState extends State<StatefulBubuttons> {
                   });
                 },
               ),
-               PopupMenuButton(onSelected: (value) async {
-               
-                setState(() {
-                  _selectedCountry = value;
-                });
-              }, itemBuilder: (context) {
-                return countries.map((e) {
-                  return PopupMenuItem(
-                    value: e,
-                    child: Text(e.name),
-                  );
-                }).toList();
-              })
+              PopupMenuButton(
+                  onSelected: (value) async {
+                    setState(() {
+                      _selectedCountry = value;
+                    });
+                  },
+                  itemBuilder: (context) {
+                    return countries.map((e) {
+                      return PopupMenuItem(
+                        value: e,
+                        child: Text(e.name),
+                      );
+                    }).toList();
+                  })
             ],
           ),
         ),
@@ -269,4 +265,3 @@ class Countery {
   int id;
   Countery(this.id, this.name, this.code);
 }
-

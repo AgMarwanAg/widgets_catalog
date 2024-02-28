@@ -12,8 +12,16 @@ import 'package:widgets_catalog/06buttons.dart';
 import 'package:widgets_catalog/07tabbar.dart';
 import 'package:widgets_catalog/08pageview.dart';
 import 'package:widgets_catalog/09builders.dart';
-import 'package:widgets_catalog/11statefulButtons.dart';
-import 'package:widgets_catalog/10statefulwidgets.dart';
+import 'package:widgets_catalog/10homescreen_ex.dart';
+import 'package:widgets_catalog/12statefulButtons.dart';
+import 'package:widgets_catalog/11statefulwidgets.dart';
+import 'package:widgets_catalog/14dialogs.dart';
+import 'package:widgets_catalog/15navigation.dart';
+import 'package:widgets_catalog/16getx.dart';
+import 'package:get/get.dart';
+import 'package:widgets_catalog/17apis.dart';
+
+import '13forms.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,14 +33,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Widget Catalog',
+    return GetMaterialApp(
+       title: 'Flutter Widget Catalog',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Widget Catalog'),
+      routes: {
+        '/screen2': (context) => const ScreenTwo(),
+        '/Navigation': (context) => const Navigation(),
+      },
     );
   }
 }
@@ -69,8 +81,14 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationButton(label: 'Tab Bar', page: AppTabBar()),
           NavigationButton(label: 'Page Bar', page: AppPageView()),
           NavigationButton(label: 'Builders', page: Builders()),
+          NavigationButton(label: 'HomeScreen Ex', page: HomeScreenEx()),
           NavigationButton(label: 'Stateful Widgets', page: StateFulWidgets()),
           NavigationButton(label: 'Stateful buttons', page: StatefulBubuttons()),
+          NavigationButton(label: 'Forms', page: Forms()),
+          NavigationButton(label: 'Dialogs', page: Dialogs()),
+          NavigationButton(label: 'Navigation', page: Navigation()),
+          NavigationButton(label: 'Getx', page: Getx()),
+          NavigationButton(label: 'Apis', page: Apis()),
         ],
       ),
     );

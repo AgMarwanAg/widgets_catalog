@@ -6,7 +6,18 @@ class AppScaffold extends StatelessWidget {
   final Widget body;
   final bool withCode;
   final String? filePath;
-  const AppScaffold({super.key, required this.title, required this.body, this.withCode = true, this.filePath});
+  final Widget? floatingActionButton, bottomNavigationBar;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+
+  const AppScaffold(
+      {super.key,
+      required this.title,
+      required this.body,
+      this.withCode = true,
+      this.filePath,
+      this.floatingActionButton,
+      this.bottomNavigationBar,
+      this.floatingActionButtonLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +41,10 @@ class AppScaffold extends StatelessWidget {
           ),
           body: withCode
               ? TabBarView(children: [
-                  SingleChildScrollView(
-                    child: body,
+                  Center(
+                    child: SingleChildScrollView(
+                      child: body,
+                    ),
                   ),
                   SourceCodeView(
                     filePath: filePath,
@@ -40,6 +53,9 @@ class AppScaffold extends StatelessWidget {
               : SingleChildScrollView(
                   child: body,
                 ),
+          floatingActionButton: floatingActionButton,
+          bottomNavigationBar: bottomNavigationBar,
+          floatingActionButtonLocation: floatingActionButtonLocation,
         ),
       ),
     );
