@@ -21,6 +21,7 @@ import 'package:widgets_catalog/16getx.dart';
 import 'package:get/get.dart';
 import 'package:widgets_catalog/17apis.dart';
 import 'package:widgets_catalog/18sqflite.dart';
+import 'package:widgets_catalog/19_shared_pref.dart';
 
 import '13forms.dart';
 
@@ -91,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationButton(label: 'Getx', page: Getx()),
           NavigationButton(label: 'Apis', page: Apis()),
           NavigationButton(label: 'sqflite', page: Sqflite()),
+          NavigationButton(label: 'SharedPreferences', page: Shared()),
         ],
       ),
     );
