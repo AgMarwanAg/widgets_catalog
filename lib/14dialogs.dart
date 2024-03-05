@@ -71,7 +71,6 @@ class _DialogsState extends State<Dialogs> {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                
                 builder: (BuildContext context) {
                   return Container(
                     padding: const EdgeInsets.all(16.0),
@@ -143,6 +142,7 @@ class _DialogsState extends State<Dialogs> {
           child: const Text('Show Snackbar'),
         )
       ]),
+      
     );
   }
 }

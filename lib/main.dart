@@ -20,6 +20,7 @@ import 'package:widgets_catalog/15navigation.dart';
 import 'package:widgets_catalog/16getx.dart';
 import 'package:get/get.dart';
 import 'package:widgets_catalog/17apis.dart';
+import 'package:widgets_catalog/18sqflite.dart';
 
 import '13forms.dart';
 
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-       title: 'Flutter Widget Catalog',
+      title: 'Flutter Widget Catalog',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -89,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationButton(label: 'Navigation', page: Navigation()),
           NavigationButton(label: 'Getx', page: Getx()),
           NavigationButton(label: 'Apis', page: Apis()),
+          NavigationButton(label: 'sqflite', page: Sqflite()),
         ],
       ),
     );

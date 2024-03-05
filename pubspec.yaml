@@ -40,6 +40,8 @@ dependencies:
   carousel_slider:
   get: ^4.6.6
   dio:
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:
