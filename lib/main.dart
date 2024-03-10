@@ -24,6 +24,7 @@ import 'package:widgets_catalog/18sqflite.dart';
 import 'package:widgets_catalog/19_shared_pref.dart';
 
 import '13forms.dart';
+import '20_packages.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'cairo'
+         
       ),
       home: const MyHomePage(title: 'Flutter Widget Catalog'),
       routes: {
@@ -93,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationButton(label: 'Apis', page: Apis()),
           NavigationButton(label: 'sqflite', page: Sqflite()),
           NavigationButton(label: 'SharedPreferences', page: Shared()),
+          NavigationButton(label: 'Packages', page: Packages()),
         ],
       ),
     );
